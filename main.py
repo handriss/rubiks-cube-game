@@ -102,11 +102,43 @@ class RubiksCubeGui:
 
     def draw_stationary_3D(self, cube):
         self.canvas.delete('all')
-        # self.canvas.create_polygon(50, 50, 50, 100, 100, 100, 200, 200)
-        # self.canvas.create_polygon(200, 200, 100, 200, 50, 120, 50, 170, fill="green")
-        self.canvas.create_line(200, 200, 200, 100)
-        self.canvas.create_line(200, 100, 300, 80)
 
+        self.draw_paralelogram(100, 120, 30, "right")
+        self.draw_paralelogram(100, 85, 30, "right")
+        self.draw_paralelogram(100, 50, 30, "right")
+        self.draw_paralelogram(130, 67, 30, "right")
+        self.draw_paralelogram(130, 102, 30, "right")
+        self.draw_paralelogram(130, 137, 30, "right")
+        self.draw_paralelogram(160, 83, 30, "right")
+        self.draw_paralelogram(160, 118, 30, "right")
+        self.draw_paralelogram(160, 153, 30, "right")
+
+        self.draw_paralelogram(215, 83, 30, "left")
+        self.draw_paralelogram(215, 118, 30, "left")
+        self.draw_paralelogram(215, 153, 30, "left")
+        self.draw_paralelogram(245, 67, 30, "left")
+        self.draw_paralelogram(245, 102, 30, "left")
+        self.draw_paralelogram(245, 137, 30, "left")
+        self.draw_paralelogram(275, 50, 30, "left")
+        self.draw_paralelogram(275, 85, 30, "left")
+        self.draw_paralelogram(275, 120, 30, "left")
+
+        self.draw_upper_side(100, 45, 30)
+        self.draw_upper_side(130, 62, 30)
+        self.draw_upper_side(160, 79, 30)
+        self.draw_upper_side(130, 27, 30)
+        self.draw_upper_side(160, 44, 30)
+        self.draw_upper_side(190, 61, 30)
+        self.draw_upper_side(160, 10, 30)
+        self.draw_upper_side(190, 27, 30)
+        self.draw_upper_side(220, 44, 30)
+
+    def draw_paralelogram(self, x, y, size, face):
+        positions = {'left': -1, 'right': 1}
+        self.canvas.create_polygon(x, y, x, y+size, x+0.87*size*(positions.get(face)), y+1.5*size, x+0.87*size*(positions.get(face)), y+0.5*size)
+
+    def draw_upper_side(self, x, y, size):
+        self.canvas.create_polygon(x, y, x+0.87*size, y+0.5*size, x+1.74*size, y, x+0.87*size, y-0.5*size)
 
     def draw_face(self, x, y, color):
         self.middle_face = self.canvas.create_rectangle(x - 5, y - 5, x + 90, y + 90)

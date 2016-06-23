@@ -37,7 +37,6 @@ class RubiksCube:
     def move_horizontal_cw(self, row):
         temp = []
         for element in list(zip(*self.right)):
-            print(element)
             temp.append(element[row])
         for i in range(3):
             self.right[row][i] = self.front[row][i]
