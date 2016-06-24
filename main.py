@@ -13,9 +13,10 @@ class RubiksCubeGui:
         cube = RubiksCube()
         master.geometry("525x455")
         frame = Frame(master)
-        frame.place(x=0, y=0, width=500, height=325)
-        self.canvas = Canvas(frame, width=500, height=325)
+        frame.place(x=0, y=0, width=500, height=455)
+        self.canvas = Canvas(frame, width=500, height=455)
         self.canvas.pack()
+        self.state = "flat"
 
         menu = Menu(master)
         master.config(menu=menu)
@@ -27,7 +28,7 @@ class RubiksCubeGui:
         # subMenu.add_command(label="Moving 3D", command=cube.move1)
         # subMenu.add_command(label="Draggable 3D", command=cube.move1)
 
-        button1 = Button(master, text="||↑", command=lambda: self.move_vertical_cw(cube, 2))
+        button1 = Button(master, text="cica||↑", command=lambda: self.move_vertical_cw(cube, 2))
         button2 = Button(master, text="||↓", command=lambda: self.move_vertical_acw(cube, 2))
         button3 = Button(master, text="|↑|", command=lambda: self.move_vertical_cw(cube, 1))
         button4 = Button(master, text="|↓|", command=lambda: self.move_vertical_acw(cube, 1))
@@ -69,29 +70,48 @@ class RubiksCubeGui:
 
     def move_vertical_cw(self, cube, column):
         cube.move_vertical_cw(column)
-        self.draw_flat(cube)
+        if self.state == "flat":
+            self.draw_flat(cube)
+        elif self.state == "stationary_3D":
+            self.draw_stationary_3D(cube)
 
     def move_vertical_acw(self, cube, column):
         cube.move_vertical_acw(column)
-        self.draw_flat(cube)
+        if self.state == "flat":
+            self.draw_flat(cube)
+        elif self.state == "stationary_3D":
+            self.draw_stationary_3D(cube)
 
     def move_horizontal_cw(self, cube, row):
         cube.move_horizontal_cw(row)
-        self.draw_flat(cube)
+        if self.state == "flat":
+            self.draw_flat(cube)
+        elif self.state == "stationary_3D":
+            self.draw_stationary_3D(cube)
 
     def move_horizontal_acw(self, cube, row):
         cube.move_horizontal_acw(row)
-        self.draw_flat(cube)
+        if self.state == "flat":
+            self.draw_flat(cube)
+        elif self.state == "stationary_3D":
+            self.draw_stationary_3D(cube)
 
     def move_rotate_cw(self, cube, depth):
         cube.move_rotate_cw(depth)
-        self.draw_flat(cube)
+        if self.state == "flat":
+            self.draw_flat(cube)
+        elif self.state == "stationary_3D":
+            self.draw_stationary_3D(cube)
 
     def move_rotate_acw(self, cube, depth):
         cube.move_rotate_acw(depth)
-        self.draw_flat(cube)
+        if self.state == "flat":
+            self.draw_flat(cube)
+        elif self.state == "stationary_3D":
+            self.draw_stationary_3D(cube)
 
     def draw_flat(self, cube):
+        self.state = "flat"
         self.canvas.delete('all')
         self.draw_face(120, 120, cube.front)
         self.draw_face(120, 20, cube.up)
@@ -101,44 +121,48 @@ class RubiksCubeGui:
         self.draw_face(320, 120, cube.rear)
 
     def draw_stationary_3D(self, cube):
+        self.state = "stationary_3D"
         self.canvas.delete('all')
+        self.draw_3D_cube(130, 140, 30, cube)
+        self.draw_3D_cube(130, 350, 30, cube)
 
-        self.draw_paralelogram(100, 120, 30, "right")
-        self.draw_paralelogram(100, 85, 30, "right")
-        self.draw_paralelogram(100, 50, 30, "right")
-        self.draw_paralelogram(130, 67, 30, "right")
-        self.draw_paralelogram(130, 102, 30, "right")
-        self.draw_paralelogram(130, 137, 30, "right")
-        self.draw_paralelogram(160, 83, 30, "right")
-        self.draw_paralelogram(160, 118, 30, "right")
-        self.draw_paralelogram(160, 153, 30, "right")
+    def draw_3D_cube(self, x, y, size, cube):
+        self.draw_paralelogram(x, y, size, "right", self.COLORS.get(cube.front[2][0])) # 7
+        self.draw_paralelogram(x, y - 35, size, "right", self.COLORS.get(cube.front[1][0])) # 4.
+        self.draw_paralelogram(x, y - 70, size, "right", self.COLORS.get(cube.front[0][0])) # 1
+        self.draw_paralelogram(x + 30, y - 53, size, "right", self.COLORS.get(cube.front[0][1])) # 2
+        self.draw_paralelogram(x + 30, y - 18, size, "right", self.COLORS.get(cube.front[1][1])) # 5
+        self.draw_paralelogram(x + 30, y + 17, size, "right", self.COLORS.get(cube.front[2][1])) # 8
+        self.draw_paralelogram(x + 60, y - 37, size, "right", self.COLORS.get(cube.front[0][2])) # 3
+        self.draw_paralelogram(x + 60, y - 2, size, "right", self.COLORS.get(cube.front[1][2])) # 6
+        self.draw_paralelogram(x + 60, y + 33, size, "right", self.COLORS.get(cube.front[2][2])) #9
 
-        self.draw_paralelogram(215, 83, 30, "left")
-        self.draw_paralelogram(215, 118, 30, "left")
-        self.draw_paralelogram(215, 153, 30, "left")
-        self.draw_paralelogram(245, 67, 30, "left")
-        self.draw_paralelogram(245, 102, 30, "left")
-        self.draw_paralelogram(245, 137, 30, "left")
-        self.draw_paralelogram(275, 50, 30, "left")
-        self.draw_paralelogram(275, 85, 30, "left")
-        self.draw_paralelogram(275, 120, 30, "left")
+        self.draw_paralelogram(x + 115, y - 37, size, "left", self.COLORS.get(cube.right[0][0])) #1
+        self.draw_paralelogram(x + 115, y - 2, size, "left", self.COLORS.get(cube.right[1][0])) # 4
+        self.draw_paralelogram(x + 115, y + 33, size, "left", self.COLORS.get(cube.right[2][0])) # 7
+        self.draw_paralelogram(x + 145, y - 53, size, "left", self.COLORS.get(cube.right[0][1])) # 2
+        self.draw_paralelogram(x + 145, y - 18, size, "left", self.COLORS.get(cube.right[1][1])) #5
+        self.draw_paralelogram(x + 145, y + 17, size, "left", self.COLORS.get(cube.right[2][1])) # 8
+        self.draw_paralelogram(x + 175, y - 70, size, "left", self.COLORS.get(cube.right[0][2])) # 3
+        self.draw_paralelogram(x + 175, y - 35, size, "left", self.COLORS.get(cube.right[1][2])) # 6
+        self.draw_paralelogram(x + 175, y, size, "left", self.COLORS.get(cube.right[2][2])) # 9
 
-        self.draw_upper_side(100, 45, 30)
-        self.draw_upper_side(130, 62, 30)
-        self.draw_upper_side(160, 79, 30)
-        self.draw_upper_side(130, 27, 30)
-        self.draw_upper_side(160, 44, 30)
-        self.draw_upper_side(190, 61, 30)
-        self.draw_upper_side(160, 10, 30)
-        self.draw_upper_side(190, 27, 30)
-        self.draw_upper_side(220, 44, 30)
+        self.draw_upper_side(x, y - 75, size, self.COLORS.get(cube.up[2][0])) # 7
+        self.draw_upper_side(x + 30, y - 58, size, self.COLORS.get(cube.up[2][1])) # 8
+        self.draw_upper_side(x + 60, y - 41, size, self.COLORS.get(cube.up[2][2])) # 9
+        self.draw_upper_side(x + 30, y - 93, size, self.COLORS.get(cube.up[1][0])) # 4
+        self.draw_upper_side(x + 60, y - 76, size, self.COLORS.get(cube.up[1][1])) #5
+        self.draw_upper_side(x + 90, y - 59, size, self.COLORS.get(cube.up[1][2])) # 6
+        self.draw_upper_side(x + 60, y - 110, size, self.COLORS.get(cube.up[0][0])) # 1
+        self.draw_upper_side(x + 90, y - 93, size, self.COLORS.get(cube.up[0][1])) # 2
+        self.draw_upper_side(x + 120, y - 76, size, self.COLORS.get(cube.up[0][2])) # 3
 
-    def draw_paralelogram(self, x, y, size, face):
+    def draw_paralelogram(self, x, y, size, face, color):
         positions = {'left': -1, 'right': 1}
-        self.canvas.create_polygon(x, y, x, y+size, x+0.87*size*(positions.get(face)), y+1.5*size, x+0.87*size*(positions.get(face)), y+0.5*size)
+        self.canvas.create_polygon(x, y, x, y+size, x+0.87*size*(positions.get(face)), y+1.5*size, x+0.87*size*(positions.get(face)), y+0.5*size, fill=color)
 
-    def draw_upper_side(self, x, y, size):
-        self.canvas.create_polygon(x, y, x+0.87*size, y+0.5*size, x+1.74*size, y, x+0.87*size, y-0.5*size)
+    def draw_upper_side(self, x, y, size, color):
+        self.canvas.create_polygon(x, y, x+0.87*size, y+0.5*size, x+1.74*size, y, x+0.87*size, y-0.5*size, fill=color)
 
     def draw_face(self, x, y, color):
         self.middle_face = self.canvas.create_rectangle(x - 5, y - 5, x + 90, y + 90)
