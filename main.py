@@ -1,8 +1,8 @@
 # coding=utf-8
+#  sudo apt-get install python3-tk
 
-from Tkinter import *
+from tkinter import *
 from cube import RubiksCube
-# from canvas import Canvas
 
 class RubiksCubeGui:
 
@@ -12,6 +12,7 @@ class RubiksCubeGui:
 
         cube = RubiksCube()
         master.geometry("525x455")
+        master.title("Rubik's cube")
         frame = Frame(master)
         frame.place(x=0, y=0, width=500, height=455)
         self.canvas = Canvas(frame, width=500, height=455)
@@ -28,45 +29,34 @@ class RubiksCubeGui:
         # subMenu.add_command(label="Moving 3D", command=cube.move1)
         # subMenu.add_command(label="Draggable 3D", command=cube.move1)
 
-        button1 = Button(master, text="cica||↑", command=lambda: self.move_vertical_cw(cube, 2))
-        button2 = Button(master, text="||↓", command=lambda: self.move_vertical_acw(cube, 2))
-        button3 = Button(master, text="|↑|", command=lambda: self.move_vertical_cw(cube, 1))
-        button4 = Button(master, text="|↓|", command=lambda: self.move_vertical_acw(cube, 1))
-        button5 = Button(master, text="↑||", command=lambda: self.move_vertical_cw(cube, 0))
-        button6 = Button(master, text="↓||", command=lambda: self.move_vertical_acw(cube, 0))
+        button_texts = ["||↑", "||↓", "|↑|", "|↓|", "↑||", "↓||", "→--", "←--", "-→-", "-←-", "--→", "--←",
+                        "||↰", "||↱", "|↰|", "|↱|", "↰||", "↱||"]
 
-        button7 = Button(master, text="→--", command=lambda: self.move_horizontal_cw(cube, 0))
-        button8 = Button(master, text="←--", command=lambda: self.move_horizontal_acw(cube, 0))
-        button9 = Button(master, text="-→-", command=lambda: self.move_horizontal_cw(cube, 1))
-        button10 = Button(master, text="-←-", command=lambda: self.move_horizontal_acw(cube, 1))
-        button11 = Button(master, text="--→", command=lambda: self.move_horizontal_cw(cube, 2))
-        button12 = Button(master, text="--←", command=lambda: self.move_horizontal_acw(cube, 2))
-
-        button13 = Button(master, text="||↰", command=lambda: self.move_rotate_cw(cube, 2))
-        button14 = Button(master, text="||↱", command=lambda: self.move_rotate_acw(cube, 2))
-        button15 = Button(master, text="|↰|", command=lambda: self.move_rotate_cw(cube, 1))
-        button16 = Button(master, text="|↱|", command=lambda: self.move_rotate_acw(cube, 1))
-        button17 = Button(master, text="↰||", command=lambda: self.move_rotate_cw(cube, 0))
-        button18 = Button(master, text="↱||", command=lambda: self.move_rotate_acw(cube, 0))
-
-        button1.place(x=425, y=5, width=100, height=20)
-        button2.place(x=425, y=30, width=100, height=20)
-        button3.place(x=425, y=55, width=100, height=20)
-        button4.place(x=425, y=80, width=100, height=20)
-        button5.place(x=425, y=105, width=100, height=20)
-        button6.place(x=425, y=130, width=100, height=20)
-        button7.place(x=425, y=155, width=100, height=20)
-        button8.place(x=425, y=180, width=100, height=20)
-        button9.place(x=425, y=205, width=100, height=20)
-        button10.place(x=425, y=230, width=100, height=20)
-        button11.place(x=425, y=255, width=100, height=20)
-        button12.place(x=425, y=280, width=100, height=20)
-        button13.place(x=425, y=305, width=100, height=20)
-        button14.place(x=425, y=330, width=100, height=20)
-        button15.place(x=425, y=355, width=100, height=20)
-        button16.place(x=425, y=380, width=100, height=20)
-        button17.place(x=425, y=405, width=100, height=20)
-        button18.place(x=425, y=430, width=100, height=20)
+        movements = [
+            lambda: self.move_vertical_cw(cube, 2),
+            lambda: self.move_vertical_acw(cube, 2),
+            lambda: self.move_vertical_cw(cube, 1),
+            lambda: self.move_vertical_acw(cube, 1),
+            lambda: self.move_vertical_cw(cube, 0),
+            lambda: self.move_vertical_acw(cube, 0),
+            lambda: self.move_horizontal_cw(cube, 0),
+            lambda: self.move_horizontal_acw(cube, 0),
+            lambda: self.move_horizontal_cw(cube, 1),
+            lambda: self.move_horizontal_acw(cube, 1),
+            lambda: self.move_horizontal_cw(cube, 2),
+            lambda: self.move_horizontal_acw(cube, 2),
+            lambda: self.move_rotate_cw(cube, 2),
+            lambda: self.move_rotate_acw(cube, 2),
+            lambda: self.move_rotate_cw(cube, 1),
+            lambda: self.move_rotate_acw(cube, 1),
+            lambda: self.move_rotate_cw(cube, 0),
+            lambda: self.move_rotate_acw(cube, 0)
+            ]
+        i = 0
+        for button in button_texts:
+            button = Button(master, text=button, command=movements[i])
+            button.place(x=425, y=5+i*25, width=100, height=20)
+            i += 1
 
     def move_vertical_cw(self, cube, column):
         cube.move_vertical_cw(column)
@@ -113,69 +103,77 @@ class RubiksCubeGui:
     def draw_flat(self, cube):
         self.state = "flat"
         self.canvas.delete('all')
-        self.draw_face(120, 120, cube.front)
-        self.draw_face(120, 20, cube.up)
-        self.draw_face(20, 120, cube.left)
-        self.draw_face(220, 120, cube.right)
-        self.draw_face(120, 220, cube.bottom)
-        self.draw_face(320, 120, cube.rear)
+
+        positions = [[120, 120, cube.front], [120, 20, cube.up], [20, 120, cube.left], [220, 120, cube.right],
+                     [120, 220, cube.bottom], [320, 120, cube.rear]]
+
+        for i in range(len(positions)):
+            self.draw_one_face(positions[i][0], positions[i][1], positions[i][2])
+
+    def draw_one_face(self, x, y, color):
+        coords = [
+            [-5, -5, 90, 90, ""],
+            [0, 0, 25, 25, self.COLORS.get(color[0][0])],
+            [30, 0, 55, 25, self.COLORS.get(color[0][1])],
+            [60, 0, 85, 25, self.COLORS.get(color[0][2])],
+            [0, 30, 25, 55, self.COLORS.get(color[1][0])],
+            [30, 30, 55, 55, self.COLORS.get(color[1][1])],
+            [60, 30, 85, 55, self.COLORS.get(color[1][2])],
+            [0, 60, 25, 85, self.COLORS.get(color[2][0])],
+            [30, 60, 55, 85, self.COLORS.get(color[2][1])],
+            [60, 60, 85, 85, self.COLORS.get(color[2][2])]
+            ]
+        for coord in coords:
+            self.canvas.create_rectangle(x+coord[0], y+coord[1], x+coord[2], y+coord[3], fill=coord[4])
 
     def draw_stationary_3D(self, cube):
         self.state = "stationary_3D"
         self.canvas.delete('all')
         self.draw_3D_cube(130, 140, 30, cube)
-        self.draw_3D_cube(130, 350, 30, cube)
 
     def draw_3D_cube(self, x, y, size, cube):
-        self.draw_paralelogram(x, y, size, "right", self.COLORS.get(cube.front[2][0])) # 7
-        self.draw_paralelogram(x, y - 35, size, "right", self.COLORS.get(cube.front[1][0])) # 4.
-        self.draw_paralelogram(x, y - 70, size, "right", self.COLORS.get(cube.front[0][0])) # 1
-        self.draw_paralelogram(x + 30, y - 53, size, "right", self.COLORS.get(cube.front[0][1])) # 2
-        self.draw_paralelogram(x + 30, y - 18, size, "right", self.COLORS.get(cube.front[1][1])) # 5
-        self.draw_paralelogram(x + 30, y + 17, size, "right", self.COLORS.get(cube.front[2][1])) # 8
-        self.draw_paralelogram(x + 60, y - 37, size, "right", self.COLORS.get(cube.front[0][2])) # 3
-        self.draw_paralelogram(x + 60, y - 2, size, "right", self.COLORS.get(cube.front[1][2])) # 6
-        self.draw_paralelogram(x + 60, y + 33, size, "right", self.COLORS.get(cube.front[2][2])) #9
-
-        self.draw_paralelogram(x + 115, y - 37, size, "left", self.COLORS.get(cube.right[0][0])) #1
-        self.draw_paralelogram(x + 115, y - 2, size, "left", self.COLORS.get(cube.right[1][0])) # 4
-        self.draw_paralelogram(x + 115, y + 33, size, "left", self.COLORS.get(cube.right[2][0])) # 7
-        self.draw_paralelogram(x + 145, y - 53, size, "left", self.COLORS.get(cube.right[0][1])) # 2
-        self.draw_paralelogram(x + 145, y - 18, size, "left", self.COLORS.get(cube.right[1][1])) #5
-        self.draw_paralelogram(x + 145, y + 17, size, "left", self.COLORS.get(cube.right[2][1])) # 8
-        self.draw_paralelogram(x + 175, y - 70, size, "left", self.COLORS.get(cube.right[0][2])) # 3
-        self.draw_paralelogram(x + 175, y - 35, size, "left", self.COLORS.get(cube.right[1][2])) # 6
-        self.draw_paralelogram(x + 175, y, size, "left", self.COLORS.get(cube.right[2][2])) # 9
-
-        self.draw_upper_side(x, y - 75, size, self.COLORS.get(cube.up[2][0])) # 7
-        self.draw_upper_side(x + 30, y - 58, size, self.COLORS.get(cube.up[2][1])) # 8
-        self.draw_upper_side(x + 60, y - 41, size, self.COLORS.get(cube.up[2][2])) # 9
-        self.draw_upper_side(x + 30, y - 93, size, self.COLORS.get(cube.up[1][0])) # 4
-        self.draw_upper_side(x + 60, y - 76, size, self.COLORS.get(cube.up[1][1])) #5
-        self.draw_upper_side(x + 90, y - 59, size, self.COLORS.get(cube.up[1][2])) # 6
-        self.draw_upper_side(x + 60, y - 110, size, self.COLORS.get(cube.up[0][0])) # 1
-        self.draw_upper_side(x + 90, y - 93, size, self.COLORS.get(cube.up[0][1])) # 2
-        self.draw_upper_side(x + 120, y - 76, size, self.COLORS.get(cube.up[0][2])) # 3
+        coords = [
+            [0, 0, "right", self.COLORS.get(cube.front[2][0]), self.COLORS.get(cube.left[2][0])],
+            [0, -35, "right", self.COLORS.get(cube.front[1][0]), self.COLORS.get(cube.left[1][0])],
+            [0, -70, "right", self.COLORS.get(cube.front[0][0]), self.COLORS.get(cube.left[0][0])],
+            [30, -53, "right", self.COLORS.get(cube.front[0][1]), self.COLORS.get(cube.left[0][1])],
+            [30, -18, "right", self.COLORS.get(cube.front[1][1]), self.COLORS.get(cube.left[1][1])],
+            [30, 17, "right", self.COLORS.get(cube.front[2][1]), self.COLORS.get(cube.left[2][1])],
+            [60, -37, "right", self.COLORS.get(cube.front[0][2]), self.COLORS.get(cube.left[0][2])],
+            [60, -2, "right", self.COLORS.get(cube.front[1][2]), self.COLORS.get(cube.left[1][2])],
+            [60, 33, "right", self.COLORS.get(cube.front[2][2]), self.COLORS.get(cube.left[2][2])],
+            [115, -37, "left", self.COLORS.get(cube.right[0][0]), self.COLORS.get(cube.rear[0][0])],
+            [115, -2, "left", self.COLORS.get(cube.right[1][0]), self.COLORS.get(cube.rear[1][0])],
+            [115, 33, "left", self.COLORS.get(cube.right[2][0]), self.COLORS.get(cube.rear[2][0])],
+            [145, -53, "left", self.COLORS.get(cube.right[0][1]), self.COLORS.get(cube.rear[0][1])],
+            [145, -18, "left", self.COLORS.get(cube.right[1][1]), self.COLORS.get(cube.rear[1][1])],
+            [145, 17, "left", self.COLORS.get(cube.right[2][1]), self.COLORS.get(cube.rear[2][1])],
+            [175, -70, "left", self.COLORS.get(cube.right[0][2]), self.COLORS.get(cube.rear[0][2])],
+            [175, -35, "left", self.COLORS.get(cube.right[1][2]), self.COLORS.get(cube.rear[1][2])],
+            [175, 0, "left",  self.COLORS.get(cube.right[2][2]), self.COLORS.get(cube.rear[2][2])],
+            [0, -75, "upper", self.COLORS.get(cube.up[2][0]), self.COLORS.get(cube.bottom[2][0])],
+            [30, -58, "upper", self.COLORS.get(cube.up[2][1]), self.COLORS.get(cube.bottom[1][0])],
+            [60, -41, "upper", self.COLORS.get(cube.up[2][2]), self.COLORS.get(cube.bottom[0][0])],
+            [30, -93, "upper", self.COLORS.get(cube.up[1][0]), self.COLORS.get(cube.bottom[2][1])],
+            [60, -76, "upper", self.COLORS.get(cube.up[1][1]), self.COLORS.get(cube.bottom[1][1])],
+            [90, -59, "upper", self.COLORS.get(cube.up[1][2]), self.COLORS.get(cube.bottom[0][1])],
+            [60, -110, "upper", self.COLORS.get(cube.up[0][0]), self.COLORS.get(cube.bottom[2][2])],
+            [90, -93, "upper", self.COLORS.get(cube.up[0][1]), self.COLORS.get(cube.bottom[1][2])],
+            [120, -76, "upper", self.COLORS.get(cube.up[0][2]), self.COLORS.get(cube.bottom[0][2])]
+        ]
+        for coord in coords:
+            self.draw_paralelogram(x+coord[0], y+coord[1], size, coord[2], coord[3])
+        y += 210
+        for coord in coords:
+            self.draw_paralelogram(x+coord[0], y+coord[1], size, coord[2], coord[4])
 
     def draw_paralelogram(self, x, y, size, face, color):
-        positions = {'left': -1, 'right': 1}
-        self.canvas.create_polygon(x, y, x, y+size, x+0.87*size*(positions.get(face)), y+1.5*size, x+0.87*size*(positions.get(face)), y+0.5*size, fill=color)
+        positions = {'left': -1, 'right': 1, 'upper': 0}
+        if positions.get(face) == 0:
+            self.canvas.create_polygon(x, y, x+0.87*size, y+0.5*size, x+1.74*size, y, x+0.87*size, y-0.5*size, fill=color)
+        else:
+            self.canvas.create_polygon(x, y, x, y+size, x+0.87*size*(positions.get(face)), y+1.5*size, x+0.87*size*(positions.get(face)), y+0.5*size, fill=color)
 
-    def draw_upper_side(self, x, y, size, color):
-        self.canvas.create_polygon(x, y, x+0.87*size, y+0.5*size, x+1.74*size, y, x+0.87*size, y-0.5*size, fill=color)
-
-    def draw_face(self, x, y, color):
-        self.middle_face = self.canvas.create_rectangle(x - 5, y - 5, x + 90, y + 90)
-        self.middle_face = self.canvas.create_rectangle(x, y, x + 25, y + 25, fill=self.COLORS.get(color[0][0]))
-        self.middle_face = self.canvas.create_rectangle(x + 30, y, x + 55, y + 25, fill=self.COLORS.get(color[0][1]))
-        self.middle_face = self.canvas.create_rectangle(x + 60, y, x + 85, y + 25, fill=self.COLORS.get(color[0][2]))
-        self.middle_face = self.canvas.create_rectangle(x, y + 30, x + 25, y + 55, fill=self.COLORS.get(color[1][0]))
-        self.middle_face = self.canvas.create_rectangle(x + 30, y + 30, x + 55, y + 55, fill=self.COLORS.get(color[1][1]))
-        self.middle_face = self.canvas.create_rectangle(x + 60, y + 30, x + 85, y + 55, fill=self.COLORS.get(color[1][2]))
-        self.middle_face = self.canvas.create_rectangle(x, y + 60, x + 25, y + 85, fill=self.COLORS.get(color[2][0]))
-        self.middle_face = self.canvas.create_rectangle(x + 30, y + 60, x + 55, y + 85, fill=self.COLORS.get(color[2][1]))
-        self.middle_face = self.canvas.create_rectangle(x + 60, y + 60, x + 85, y + 85, fill=self.COLORS.get(color[2][2]))
-#
 root = Tk()
 my_gui = RubiksCubeGui(root)
 root.mainloop()
