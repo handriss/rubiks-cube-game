@@ -56,7 +56,6 @@ class RubiksCube:
 
     def move_rotate_cw(self, depth):
         temp = []
-
         for i in range(3):
             temp.append(self.up[(depth+1)*(-1)][i])
 
